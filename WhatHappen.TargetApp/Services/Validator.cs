@@ -5,7 +5,6 @@ using WhatHappen.TargetApp.Context;
 
 namespace WhatHappen.TargetApp.Services;
 
-[Track]
 public class Validator(IValidatorCalculator calculator, OtherGreeter.OtherGreeterClient client, AppDbContext context) : IValidator
 {
 	public async Task<bool> IsValidAsync(HelloRequest request)
@@ -30,7 +29,6 @@ public class Validator(IValidatorCalculator calculator, OtherGreeter.OtherGreete
 	}
 }
 
-[Track]
 public static class TimeVerifier
 {
 	public static bool IsVerified() => true;

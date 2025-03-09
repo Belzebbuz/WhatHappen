@@ -7,7 +7,7 @@ using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.Interceptors;
 
-public class DatabaseInterceptor : DbCommandInterceptor
+internal sealed class DatabaseInterceptor : DbCommandInterceptor
 {
 	public static readonly DatabaseInterceptor Interceptor = new ();
 	private readonly record struct StepDbPapams(string Key, object Value);

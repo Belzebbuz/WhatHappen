@@ -21,8 +21,8 @@ public static class TracingExtensions
 	{
 		// services.Configure<WhatHappenOptions>(configuration.GetSection(nameof(WhatHappenOptions)));
 		services.AddTransient<CastleMethodInterceptor>();
-		//DecorateTrackingServices(services, assembly);
-		HarmonyWhatHappenPatcher.Patch(assembly);
+		DecorateTrackingServices(services, assembly); // Если используем Castle декораторы то TrackAttribute должен быть развешан на интерфейсы
+		//HarmonyWhatHappenPatcher.Patch(assembly); //Если используем патчинг, то нужно перенести TrackAttribute с интерфейсов на реализации
 		services.PostConfigure<GrpcServiceOptions>(options => options.Interceptors.Add<GrpcTraceInitInterceptor>());
 		return services;
 	}

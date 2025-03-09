@@ -5,7 +5,7 @@ using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.Interceptors;
 
-public static class HarmonyMethodInterceptor
+internal static class HarmonyMethodInterceptor
 {
 	public static void Prefix(
 		MethodBase __originalMethod,

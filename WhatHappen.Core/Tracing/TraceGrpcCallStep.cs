@@ -2,7 +2,7 @@
 
 namespace WhatHappen.Core.Tracing;
 
-public class TraceGrpcCallStep : TraceStep
+internal class TraceGrpcCallStep : TraceStep
 {
 	public override string Type => "gRPC";
 	public override bool IsExternal { get; } = true;

@@ -1,6 +1,6 @@
 ﻿namespace WhatHappen.Core.Tracing;
 
-public interface IAfterCallOutputSetter
+internal interface IAfterCallOutputSetter
 {
 	void SetOutput(object? output);
 }

@@ -2,7 +2,7 @@
 
 namespace WhatHappen.Core.Tracing;
 
-public class InitTraceGrpcStep : TraceStep, IAfterCallOutputSetter
+internal class InitTraceGrpcStep : TraceStep, IAfterCallOutputSetter
 {
 	public override string Type => "Инициализация отслеживания gRPC";
 	public string Method { get; set; }

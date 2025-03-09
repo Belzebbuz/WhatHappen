@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace WhatHappen.Core.Tracing;
 
-public class TraceMethodInvocationStep : TraceStep, IAfterCallOutputSetter
+internal class TraceMethodInvocationStep : TraceStep, IAfterCallOutputSetter
 {
 	public override string Type => "Вызов метода";
 

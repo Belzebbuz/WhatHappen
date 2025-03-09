@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace WhatHappen.Core.Tracing;
 
-public static class TracingContext
+internal static class TracingContext
 {
 	private static readonly AsyncLocal<Trace> CurrentTrace = new();
 	private static readonly AsyncLocal<Stack<TraceStep>> CallStack = new();

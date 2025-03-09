@@ -2,7 +2,7 @@
 
 namespace WhatHappen.TargetApp.Services;
 
-[Track]
+
 public class ValidatorCalculator(IServiceProvider provider) : IValidatorCalculator
 {
 	public async Task<int> CalculateValidation(HelloRequest request)
@@ -12,13 +12,12 @@ public class ValidatorCalculator(IServiceProvider provider) : IValidatorCalculat
 		return result.Id.GetHashCode();
 	}
 }
-
+[Track]
 public interface IKeyedValidation
 {
 	public Task<KeyedResponse> ValidateKeyAsync(string name, int value);
 }
 
-[Track]
 public class KeyedValidation : IKeyedValidation
 {
 	public async Task<KeyedResponse> ValidateKeyAsync(string name, int value)

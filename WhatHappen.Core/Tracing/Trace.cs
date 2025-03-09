@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WhatHappen.Core.Tracing;
 
-public class Trace
+internal class Trace
 {
 	public Guid OperationId { get; } = Guid.NewGuid();
 	public TraceStep RootStep { get; set; }

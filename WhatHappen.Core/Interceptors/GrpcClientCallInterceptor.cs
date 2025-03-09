@@ -5,7 +5,7 @@ using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.Interceptors;
 
-public class GrpcClientCallInterceptor : Interceptor
+internal sealed class GrpcClientCallInterceptor : Interceptor
 {
 	public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context,
 		AsyncUnaryCallContinuation<TRequest, TResponse> continuation)

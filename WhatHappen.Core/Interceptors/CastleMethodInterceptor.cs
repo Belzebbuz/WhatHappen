@@ -10,36 +10,32 @@ public class CastleMethodInterceptor : IInterceptor
 	{
 		var step = new TraceMethodInvocationStep()
 		{
-			Class = invocation.TargetType.FullName ?? "NO NAME",
+			Class = invocation.TargetType.FullName ?? "NO NAME METHOD",
 			Method = invocation.Method.Name,
 			Input = invocation.Arguments,
 			IsCompleted = false
 		};
 		TracingContext.AddStep(step);
-		var operationId = TracingContext.GetCurrentTrace()?.OperationId;
 		
 		invocation.Proceed();
-		
+
 		if (invocation.ReturnValue is Task task)
-			task.ContinueWith(x =>
-			{
-				if(operationId is null)
-					return;
-				
-				var taskType = task.GetType();
-				if (!taskType.IsGenericType) 
-					return;
-				
-				var resultProperty = taskType.GetProperty("Result");
-				var value = resultProperty?.GetValue(task);
-				if(value is null )
-					return;
-				TracingContext.CompleteStep(value, step.StepId);
-			});
-		else
 		{
-			step.Output = invocation.ReturnValue;
-			step.IsCompleted = true;
+			if(task.IsCompleted)
+			{
+				var result = task.GetType().GetProperty("Result")?.GetValue(task);
+				TracingContext.CompleteStep(result, step.StepId);
+			}
+			else
+			{
+				task.ContinueWith(t =>
+				{
+					var result = t.GetType().GetProperty("Result")?.GetValue(t);
+					TracingContext.CompleteStep(result, step.StepId);
+				});
+			}
+			return;
 		}
+		TracingContext.CompleteStep(invocation.ReturnValue, step.StepId);
 	}
 }

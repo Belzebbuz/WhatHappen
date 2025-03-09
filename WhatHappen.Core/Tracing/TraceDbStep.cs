@@ -2,7 +2,7 @@
 
 namespace WhatHappen.Core.Tracing;
 
-public class TraceDbStep : TraceStep
+internal class TraceDbStep : TraceStep
 {
 	public override string Type => "DB";
 	public string Sql { get; set; }

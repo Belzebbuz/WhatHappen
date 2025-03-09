@@ -2,5 +2,5 @@
 
 namespace WhatHappen.Core.Tracing;
 
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Interface)]
 public class TrackAttribute : Attribute;

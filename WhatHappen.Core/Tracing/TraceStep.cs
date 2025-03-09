@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace WhatHappen.Core.Tracing;
 
-public abstract class TraceStep
+internal abstract class TraceStep
 {
 	protected JsonSerializerOptions Options =  new () 
 	{ 

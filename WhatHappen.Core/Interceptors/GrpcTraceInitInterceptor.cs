@@ -8,13 +8,13 @@ using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.Interceptors;
 
-internal sealed class GrpcTraceInitInterceptor(ILogger<GrpcTraceInitInterceptor> logger) : Interceptor
+internal sealed class GrpcTraceInitInterceptor: Interceptor
 {
 	public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context,
 		UnaryServerMethod<TRequest, TResponse> continuation)
 	{
 		var usingTrace = context.RequestHeaders.FirstOrDefault(x => x.Key == "x-what-happen")?.Value;
-		if(usingTrace is null || usingTrace.ToLower() != "true")
+		if(usingTrace is null || !usingTrace.Equals("true", System.StringComparison.InvariantCultureIgnoreCase))
 			return await base.UnaryServerHandler(request, context, continuation);
 		
 		return await HandleWithTracing(request, context, continuation);

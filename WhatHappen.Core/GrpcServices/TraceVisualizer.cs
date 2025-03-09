@@ -6,7 +6,7 @@ using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.GrpcServices;
 
-public static class TraceVisualizer
+internal static class TraceVisualizer
 {
 	private static readonly Dictionary<Type,string> NodeStyles = new()
 	{
