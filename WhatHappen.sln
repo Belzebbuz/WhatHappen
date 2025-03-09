@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatHappen.Core", "WhatHappen.Core\WhatHappen.Core.csproj", "{A2B077E0-9685-4125-9898-62672AF17721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatHappen.TargetApp", "WhatHappen.TargetApp\WhatHappen.TargetApp.csproj", "{964833D9-EF93-4028-B7BB-3AAC94B64070}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatHappen.OtherService", "WhatHappen.OtherService\WhatHappen.OtherService.csproj", "{A1634C0C-AD08-4BC2-9FAE-E7FB95F590FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2B077E0-9685-4125-9898-62672AF17721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B077E0-9685-4125-9898-62672AF17721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B077E0-9685-4125-9898-62672AF17721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B077E0-9685-4125-9898-62672AF17721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964833D9-EF93-4028-B7BB-3AAC94B64070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964833D9-EF93-4028-B7BB-3AAC94B64070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964833D9-EF93-4028-B7BB-3AAC94B64070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964833D9-EF93-4028-B7BB-3AAC94B64070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1634C0C-AD08-4BC2-9FAE-E7FB95F590FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1634C0C-AD08-4BC2-9FAE-E7FB95F590FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1634C0C-AD08-4BC2-9FAE-E7FB95F590FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1634C0C-AD08-4BC2-9FAE-E7FB95F590FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

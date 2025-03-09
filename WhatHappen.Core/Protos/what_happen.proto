@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "WhatHappen.Core";
+
+package what_happen;
+service WhatHappenService {
+  rpc GetTrace(GetTraceRequest) returns (GetTraceResponse);
+}
+
+message GetTraceRequest {
+  string operation_id = 1;
+}
+message GetTraceResponse {
+  repeated TraceStepInfo trace = 1;
+  string graph_viz = 2;
+}
+message TraceStepInfo {
+  string type = 1;
+  string method_info = 2;
+  string input = 3;
+  string output = 4;
+}
