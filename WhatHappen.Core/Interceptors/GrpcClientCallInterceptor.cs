@@ -32,7 +32,8 @@ public class GrpcClientCallInterceptor : Interceptor
 			Method = context.Method.Name,
 			Request = request,
 			Response = response,
-			Service = context.Method.ServiceName
+			Service = context.Method.ServiceName,
+			IsCompleted = true
 		};
 		TracingContext.AddStep(grpcCallStep);
 		return response;

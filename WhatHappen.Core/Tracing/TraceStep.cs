@@ -15,7 +15,9 @@ public abstract class TraceStep
 	};
 	public string StepId { get; set; }
 	public abstract string Type { get; }
-	public List<TraceStep> ChildrenSteps { get; }
-	public abstract TraceStepInfo ToTraceStepInfo();
+	public required bool IsCompleted { get; set; }
+	[JsonIgnore] public virtual bool IsExternal { get; } = false;
+	[JsonIgnore] public string? ParentStepId { get; set; }
+	[JsonIgnore] public List<TraceStep> Children { get; } = new();
 	public abstract string ToJson();
 }

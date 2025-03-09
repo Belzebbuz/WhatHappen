@@ -28,6 +28,7 @@ internal sealed class GrpcTraceInitInterceptor(ILogger<GrpcTraceInitInterceptor>
 		{
 			Method = context.Method,
 			Request = request,
+			IsCompleted = false
 		};
 		TracingContext.AddStep(initStep);
 		
@@ -35,16 +36,7 @@ internal sealed class GrpcTraceInitInterceptor(ILogger<GrpcTraceInitInterceptor>
 		var result = await base.UnaryServerHandler(request, context, continuation);
 		
 		
-		var doneStep = new DoneTraceGrpcStep()
-		{
-			Method = context.Method,
-			Response = result
-		};
-		TracingContext.AddStep(doneStep);
-		logger.LogInformation(JsonSerializer.Serialize(TracingContext.GetCurrentTrace(), new JsonSerializerOptions()
-		{
-			WriteIndented = true
-		}));
+		TracingContext.CompleteStep(result, initStep.StepId);
 		var operationId = TracingContext.GetCurrentTrace()?.OperationId.ToString();
 		if(operationId is not null)
 			context.ResponseTrailers.Add(new Metadata.Entry("x-what-happen-id", operationId));

@@ -42,6 +42,7 @@ public class DatabaseInterceptor : DbCommandInterceptor
 		{
 			Parameters = parameters,
 			Sql = command.CommandText,
+			IsCompleted = true
 		};
 		TracingContext.AddStep(dbTraceStep);
 	}

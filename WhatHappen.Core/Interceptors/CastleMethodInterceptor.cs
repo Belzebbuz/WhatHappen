@@ -13,6 +13,7 @@ public class CastleMethodInterceptor : IInterceptor
 			Class = invocation.TargetType.FullName ?? "NO NAME",
 			Method = invocation.Method.Name,
 			Input = invocation.Arguments,
+			IsCompleted = false
 		};
 		TracingContext.AddStep(step);
 		var operationId = TracingContext.GetCurrentTrace()?.OperationId;
@@ -33,11 +34,12 @@ public class CastleMethodInterceptor : IInterceptor
 				var value = resultProperty?.GetValue(task);
 				if(value is null )
 					return;
-				TracingContext.SetOutput(value, operationId.Value,step.StepId);
+				TracingContext.CompleteStep(value, step.StepId);
 			});
 		else
 		{
 			step.Output = invocation.ReturnValue;
+			step.IsCompleted = true;
 		}
 	}
 }

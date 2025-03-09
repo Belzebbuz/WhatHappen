@@ -14,16 +14,6 @@ public class TraceMethodInvocationStep : TraceStep, IAfterCallOutputSetter
 	
 	public void SetOutput(object? output) => Output = output;
 
-	public override TraceStepInfo ToTraceStepInfo()
-	{
-		return new TraceStepInfo()
-		{
-			MethodInfo = $"Класс: {Class} -- Метод: {Method}",
-			Input = JsonSerializer.Serialize(Input, Options),
-			Output = JsonSerializer.Serialize(Output, Options),
-			Type = Type
-		};
-	}
 	public override string ToJson()
 	{
 		return JsonSerializer.Serialize(this, Options);

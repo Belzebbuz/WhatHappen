@@ -8,45 +8,46 @@ namespace WhatHappen.Core.GrpcServices;
 
 public static class TraceVisualizer
 {
-	private static readonly Dictionary<Type, (string shape, string color)> NodeStyles = new()
+	private static readonly Dictionary<Type,string> NodeStyles = new()
 	{
-		{ typeof(TraceMethodInvocationStep), ("box", "#d0f0c0") },// Зеленый
-		{ typeof(TraceDbStep), ("cylinder", "#fff3b0") },// Желтый
-		{ typeof(TraceGrpcCallStep), ("component", "#ffcccb") },// Красный
-		{ typeof(InitTraceGrpcStep), ("ellipse", "#e0e0e0") }, // Серый
-		{ typeof(DoneTraceGrpcStep), ("ellipse", "#e0e0e0") }  // Серый
+		{ typeof(TraceMethodInvocationStep), ("fillcolor=lightcyan") },// Зеленый
+		{ typeof(TraceDbStep), ("fillcolor=lightyellow") },// Желтый
+		{ typeof(TraceGrpcCallStep), ("fillcolor=lightyellow") },// Красный
+		{ typeof(InitTraceGrpcStep), ("fillcolor=lightgreen") }, // Серый
 	};
 
 	public static string GenerateGraph(Trace trace)
 	{
 		var sb = new StringBuilder();
 		sb.AppendLine("digraph TraceGraph {");
-		sb.AppendLine("rankdir=TB;");
-		sb.AppendLine("node [style=filled, fontname=\"Segoe UI\"];");
-		sb.AppendLine("edge [arrowsize=0.8];");
-
-		var steps = trace.Steps;
-		for (var i = 0; i < steps.Count; i++)
-		{
-			var step = steps[i];
-			var nodeId = step.StepId;
-			var style = GetNodeStyle(step);
-            
-			sb.AppendLine($"{nodeId} [");
-			sb.AppendLine($"label=\"{GetStepLabel(step)}\"");
-			sb.AppendLine($"tooltip=\"{GetTooltip(step)}\"");
-			sb.AppendLine($"shape={style.shape}");
-			sb.AppendLine($"fillcolor=\"{style.color}\"");
-			sb.AppendLine("];");
-
-			if (i <= 0) continue;
-            
-			var prevStepId = steps[i - 1].StepId;
-			sb.AppendLine($"{prevStepId} -> {nodeId};");
-		}
-
+		sb.AppendLine("rankdir=LR;");
+		sb.AppendLine("node [shape=record, style=filled, fillcolor=lightcyan];");
+		sb.AppendLine("edge [arrowhead=vee];");
+		BuildNodes(sb, trace.RootStep);
+		BuildConnections(sb, trace.RootStep);
 		sb.AppendLine("}");
 		return sb.ToString();
+	}
+
+	private static void BuildConnections(StringBuilder sb, TraceStep step)
+	{
+		foreach (var child in step.Children)
+		{
+			var style = child.IsExternal ? "[style=dashed]" : "";
+			sb.AppendLine($"    {step.StepId} -> {child.StepId} {style};");
+			BuildConnections(sb, child);
+		}
+	}
+
+	private static void BuildNodes(StringBuilder sb, TraceStep step)
+	{
+
+		var tooltip = $"tooltip=\"{GetTooltip(step)}\"";
+		sb.AppendLine($"{step.StepId} [label=\"{GetStepLabel(step)}\"{tooltip} {GetNodeStyle(step)}];");
+		foreach (var child in step.Children)
+		{
+			BuildNodes(sb, child);
+		}
 	}
 
 	private static string GetTooltip(TraceStep step)
@@ -59,28 +60,33 @@ public static class TraceVisualizer
 		return step switch
 		{
 			TraceMethodInvocationStep methodStep => 
-				$"{methodStep.Class.Split('.')[^1]}\\n{methodStep.Method}",
+				$"{step.StepId}|Вызов метода |{methodStep.Class.Split('.')[^1]}.{methodStep.Method}",
             
 			TraceDbStep dbStep => 
-				$"DB Query\n{dbStep.Sql.Truncate(30).Replace("\n", " ").Replace("\"","\\\"")}",
+				$"{step.StepId}|DB Query|{dbStep.Sql.Truncate(30).Replace("\n", " ").Replace("\"","\\\"")}",
             
 			TraceGrpcCallStep grpcStep => 
-				$"Исходящий gRPC запрос\n{grpcStep.Service}/{grpcStep.Method}",
+				$"{step.StepId}|Исходящий gRPC запрос|{grpcStep.Service}/{grpcStep.Method}",
             
 			InitTraceGrpcStep initStep => 
-				$"Начало обработки gRPC запроса\n{initStep.Method}",
-            
-			DoneTraceGrpcStep doneStep => 
-				$"Конец обработки gRPC запроса\n{doneStep.Method}",
+				$"{step.StepId}|Начало обработки gRPC запроса|{initStep.Method}",
             
 			_ => step.Type
 		};
 	}
 
-	private static (string shape, string color) GetNodeStyle(TraceStep step)
+	private static string GetNodeStyle(TraceStep step)
 	{
-		return NodeStyles.TryGetValue(step.GetType(), out var style) 
-			? style 
-			: ("box", "#ffffff");
+		return NodeStyles.GetValueOrDefault(step.GetType(), "#ffffff");
+	}
+}
+
+public static class StringExtensions
+{
+	public static string Truncate(this string value, int maxLength)
+	{
+		return value.Length <= maxLength 
+			? value 
+			: value[..(maxLength-3)] + "...";
 	}
 }
