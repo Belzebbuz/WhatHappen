@@ -5,8 +5,12 @@ option csharp_namespace = "WhatHappen.Core";
 package what_happen;
 service WhatHappenService {
   rpc GetTrace(GetTraceRequest) returns (GetTraceResponse);
+  rpc ChangePatch(ChangePatchRequest) returns (ChangePatchResponse);
 }
-
+message ChangePatchRequest {
+  bool enable_harmony_patch = 1;
+}
+message ChangePatchResponse {}
 message GetTraceRequest {
   string operation_id = 1;
 }

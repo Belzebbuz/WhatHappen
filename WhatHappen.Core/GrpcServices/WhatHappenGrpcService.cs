@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Grpc.Core;
+using WhatHappen.Core.Patching;
 using WhatHappen.Core.Tracing;
 
 namespace WhatHappen.Core.GrpcServices;
@@ -16,25 +17,22 @@ public class WhatHappenGrpcService : WhatHappenService.WhatHappenServiceBase
 		var trace = TracingContext.GetTrace(Guid.Parse(request.OperationId));
 		if (trace is not null)
 		{
-			var steps = trace.Steps.Select(x => x.ToTraceStepInfo());
             var graph = TraceVisualizer.GenerateGraph(trace);
 			return new GetTraceResponse()
 			{
-				Trace = {steps},
+				Trace = {},
 				GraphViz = Convert.ToBase64String(Encoding.UTF8.GetBytes(graph))
 			};
 		}
 		return new GetTraceResponse();
 	}
-	
+
+	public override async Task<ChangePatchResponse> ChangePatch(ChangePatchRequest request, ServerCallContext context)
+	{
+		await Task.CompletedTask;
+		if(!request.EnableHarmonyPatch)
+			HarmonyWhatHappenPatcher.Unpatch();
+		return new ChangePatchResponse();
+	}
 }
 
-public static class StringExtensions
-{
-    public static string Truncate(this string value, int maxLength)
-    {
-        return value.Length <= maxLength 
-            ? value 
-            : value[..(maxLength-3)] + "...";
-    }
-}

@@ -17,7 +17,8 @@ public static class HarmonyMethodInterceptor
 		{
 			Class = __originalMethod.DeclaringType?.FullName ?? "No name",
 			Method = __originalMethod.Name,
-			Input = __args
+			Input = __args,
+			IsCompleted = false,
 		};
 		__state = new Dictionary<string, object> { ["step"] = step };
 		TracingContext.AddStep(step);
@@ -29,9 +30,7 @@ public static class HarmonyMethodInterceptor
 		object __result, 
 		ref Dictionary<string, object> __state)
 	{
-		var operationId = TracingContext.GetCurrentTrace()?.OperationId;
-		if (operationId == null) return;
-		
+
 		if (__state?.TryGetValue("step", out var stepObj) != true ||
 		    stepObj is not TraceMethodInvocationStep step) return;
 		
@@ -40,18 +39,18 @@ public static class HarmonyMethodInterceptor
 			if (task.IsCompleted)
 			{
 				var result = task.GetType().GetProperty("Result")?.GetValue(task);
-				TracingContext.SetOutput(result, operationId.Value, step.StepId);
+				TracingContext.CompleteStep(result, step.StepId);
 				return;
 			}
 			task.ContinueWith(t => 
 			{
 				var result = t.GetType().GetProperty("Result")?.GetValue(t);
-				TracingContext.SetOutput(result, operationId.Value, step.StepId);
+				TracingContext.CompleteStep(result, step.StepId);
 			});
 		}
 		else
 		{
-			TracingContext.SetOutput(__result, operationId.Value, step.StepId);
+			TracingContext.CompleteStep(__result, step.StepId);
 		}
 	}
 }

@@ -6,5 +6,7 @@ namespace WhatHappen.Core.Tracing;
 public class Trace
 {
 	public Guid OperationId { get; } = Guid.NewGuid();
-	public List<TraceStep> Steps { get; } = new();
+	public TraceStep RootStep { get; set; }
+	public Dictionary<string, TraceStep> StepMap { get; } = new();
+	public int StepCounter = 0;
 }

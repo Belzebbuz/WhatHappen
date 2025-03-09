@@ -19,10 +19,11 @@ public class GreeterService(
 		{
 			Name = Guid.NewGuid().ToString()
 		});
+		var res = TimeVerifier.IsVerified();
 		await dbContext.AddAsync(new Data()
 		{
 			Id = Guid.NewGuid(),
-			Value = result.Message
+			Value = result.Message + res
 		});
 		await dbContext.SaveChangesAsync();
 		var validation = await validator.IsValidAsync(request);
