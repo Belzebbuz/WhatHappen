@@ -1,15 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Castle.DynamicProxy;
 using Grpc.AspNetCore.Server;
 using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.Extensions.Configuration;
 using WhatHappen.Core.GrpcServices;
 using WhatHappen.Core.Interceptors;
-using WhatHappen.Core.Patching;
 using WhatHappen.Core.Tracing;
 using InterceptorRegistration = Grpc.Net.ClientFactory.InterceptorRegistration;
 
@@ -21,7 +22,7 @@ public static class TracingExtensions
 	{
 		// services.Configure<WhatHappenOptions>(configuration.GetSection(nameof(WhatHappenOptions)));
 		services.AddTransient<CastleMethodInterceptor>();
-		DecorateTrackingServices(services, assembly); // Если используем Castle декораторы то TrackAttribute должен быть развешан на интерфейсы
+		//DecorateTrackingServices(services, assembly); // Если используем Castle декораторы то TrackAttribute должен быть развешан на интерфейсы
 		//HarmonyWhatHappenPatcher.Patch(assembly); //Если используем патчинг, то нужно перенести TrackAttribute с интерфейсов на реализации
 		services.PostConfigure<GrpcServiceOptions>(options => options.Interceptors.Add<GrpcTraceInitInterceptor>());
 		return services;
@@ -31,6 +32,9 @@ public static class TracingExtensions
 	{
 		var trackedTypes = assembly.DefinedTypes
 			.Where(x => x.GetCustomAttribute<TrackAttribute>() != null);
+		var decorators = assembly.DefinedTypes
+			.Where(x => x.Name.EndsWith("_TraceDecorator") && x.IsClass)
+			.ToArray();
 		var generator = new ProxyGenerator();
 		foreach (var type in trackedTypes)
 		{
@@ -39,6 +43,11 @@ public static class TracingExtensions
 			{
 				if (registeredService.IsKeyedService)
 				{
+					var decoratorType = decorators.FirstOrDefault(x =>
+						                x.GetInterfaces().Contains(registeredService.ServiceType))
+					                ?? throw new ArgumentException("Для интерфейса не сгенерирован декоратор");
+
+					
 					var decoratedKeyedServiceDescriptor = new ServiceDescriptor(
 						registeredService.ServiceType,
 						registeredService.ServiceKey,
@@ -46,6 +55,7 @@ public static class TracingExtensions
 						{
 							var originalService = ActivatorUtilities.CreateInstance(provider, registeredService.KeyedImplementationType!);
 							var interceptor = provider.GetRequiredService<CastleMethodInterceptor>();
+							var decoratorInstance = Activator.CreateInstance(decoratorType, originalService);
 							var instance = generator.CreateInterfaceProxyWithTarget(type, originalService, interceptor);
 							return instance;
 						},
@@ -84,4 +94,11 @@ public static class TracingExtensions
 	{
 		app.MapGrpcService<WhatHappenGrpcService>();
 	}
+}
+
+public interface IHelp;
+
+public class IHelp_Decorator(IHelp help) : IHelp
+{
+	
 }

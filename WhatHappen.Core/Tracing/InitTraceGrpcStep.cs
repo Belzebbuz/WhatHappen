@@ -5,8 +5,8 @@ namespace WhatHappen.Core.Tracing;
 internal class InitTraceGrpcStep : TraceStep, IAfterCallOutputSetter
 {
 	public override string Type => "Инициализация отслеживания gRPC";
-	public string Method { get; set; }
-	public object Request { get; set; }
+	public required string  Method { get; set; }
+	public required object Request { get; set; }
 	public object? Response { get; set; }
 
 	public override string ToJson()

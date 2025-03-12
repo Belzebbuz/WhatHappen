@@ -18,6 +18,9 @@ internal static class TraceVisualizer
 
 	public static string GenerateGraph(Trace trace)
 	{
+		if(trace.RootStep is null)
+			return String.Empty;
+		
 		var sb = new StringBuilder();
 		sb.AppendLine("digraph TraceGraph {");
 		sb.AppendLine("rankdir=LR;");

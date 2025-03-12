@@ -1,9 +1,6 @@
-using System.Text.Json;
 using Grpc.Core;
-using WhatHappen.Core;
 using WhatHappen.OtherService;
 using WhatHappen.TargetApp.Context;
-
 namespace WhatHappen.TargetApp.Services;
 
 public class GreeterService(

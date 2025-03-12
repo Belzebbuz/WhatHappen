@@ -6,10 +6,10 @@ internal class TraceGrpcCallStep : TraceStep
 {
 	public override string Type => "gRPC";
 	public override bool IsExternal { get; } = true;
-	public string Service { get; set; }
-	public string Method { get; set; }
-	public object Request { get; set; }
-	public object Response { get; set; }
+	public required string Service { get; set; }
+	public required string Method { get; set; }
+	public required object Request { get; set; }
+	public required object Response { get; set; }
 	
 	public override string ToJson()
 	{

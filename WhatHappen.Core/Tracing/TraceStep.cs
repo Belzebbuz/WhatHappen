@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace WhatHappen.Core.Tracing;
 
-internal abstract class TraceStep
+public abstract class TraceStep
 {
 	protected JsonSerializerOptions Options =  new () 
 	{ 
@@ -13,7 +13,7 @@ internal abstract class TraceStep
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		WriteIndented = true 
 	};
-	public string StepId { get; set; }
+	public string? StepId { get; set; }
 	public abstract string Type { get; }
 	public required bool IsCompleted { get; set; }
 	[JsonIgnore] public virtual bool IsExternal { get; } = false;

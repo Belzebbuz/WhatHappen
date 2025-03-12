@@ -27,5 +27,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WhatHappen.Core\WhatHappen.Core.csproj" />
+      <ProjectReference Include="..\WhatHappen.Generators\WhatHappen.Generators\WhatHappen.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 </Project>

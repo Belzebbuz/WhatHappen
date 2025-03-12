@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace WhatHappen.Core.Tracing;
 
-internal static class TracingContext
+public static class TracingContext
 {
 	private static readonly AsyncLocal<Trace> CurrentTrace = new();
 	private static readonly AsyncLocal<Stack<TraceStep>> CallStack = new();
@@ -48,7 +48,7 @@ internal static class TracingContext
 	}
 	
 
-	public static void CompleteStep(object? output,  string stepId)
+	public static void CompleteStep(object? output,  string? stepId)
 	{
 		if (CurrentTrace.Value?.StepMap.TryGetValue(stepId, out var step) == true 
 		    && step is IAfterCallOutputSetter setter)

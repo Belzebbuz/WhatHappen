@@ -3,7 +3,7 @@ using WhatHappen.Core;
 using WhatHappen.OtherService;
 using WhatHappen.TargetApp.Context;
 using WhatHappen.TargetApp.Services;
-
+using DecoratorsGenerators;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpcReflection();
@@ -21,8 +21,12 @@ builder.Services.AddGrpcClient<OtherGreeter.OtherGreeterClient>(opt =>
 	opt.AddWhatHappenTracing();
 });
 builder.Services.AddKeyedSingleton<IKeyedValidation, KeyedValidation>("a-value");
+builder.Services.AddKeyedScoped<IGenericsValidator<GenRequest, GenResponse> , GenericsValidator>("a-value");
+builder.Services.AddKeyedScoped<IGenericsValidator<GenRequest, GenResponse> , GenericsValidatorV3>("b-value");
+builder.Services.AddTransient<IGenericsValidator<GenRequest, GenResponse> , GenericsValidator>();
+builder.Services.AddTransient<IGenericsValidator<GenRequestV2, GenResponse> , GenericsValidatorV2>();
 builder.Services.AddWhatHappen(typeof(Program).Assembly, builder.Configuration);
-
+builder.Services.DecorateTrackingServices(typeof(Program).Assembly);
 var app = builder.Build();
 await AppDbContext.MigrateAsync(app);
 
