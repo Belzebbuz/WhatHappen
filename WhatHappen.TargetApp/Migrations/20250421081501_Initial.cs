@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using WhatHappen.TargetApp.Context;
 
 #nullable disable
 
@@ -16,7 +18,8 @@ namespace WhatHappen.TargetApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false)
+                    Value = table.Column<string>(type: "text", nullable: false),
+                    InfoValues = table.Column<List<InfoValue>>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {

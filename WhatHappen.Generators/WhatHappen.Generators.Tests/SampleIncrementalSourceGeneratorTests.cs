@@ -1,4 +1,9 @@
+using System;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Bogus;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using WhatHappen.Generators.Decorators;
@@ -24,6 +29,7 @@ using DecoratorsGenerators;
 using WhatHappen.Core;
 using WhatHappen.Core.Tracing;
 using WhatHappen.Generators;
+using WhatHappen.Generators.Decorators;
 
 namespace WhatHappen.TargetApp.Services;
 
@@ -103,6 +109,7 @@ partial class Vector3
     }
 }
 ";
+
 
 	[Fact]
 	public void GenerateTrackingDecoratorMethod()
